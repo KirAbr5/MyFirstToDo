@@ -6,12 +6,12 @@ token = ""
 bot = telebot.TeleBot(token)
 
 HELP = """
-/help - напечатать справку по программе.
-/add или /todo - добавить задачу в список (название задачи запрашиваем у пользователя).
-/show или /print - напечатать все добавленные задачи.
-/random - добавлять случайную задачу на дату Сегодня.
-/count - подсчет задач на дату.
-/exit - выход из программы."""
+/help или /start - помощь с ботом.
+/add или /todo - добавить задачу в список (пример: /add сегодня Изучить Python).
+/show или /print - показать все добавленные задачи за время (пример: /show сегодня).
+/random - добавлять случайную задачу на сегодня.
+/count - сколько сообщений отправлено в чат?.
+/bye - он попрощается."""
 
 RANDOM_TASKS = ["Записаться на курс в Нетологию", "Написать Гвидо письмо", "Покормить кошку", "Помыть машину"]
 
@@ -24,9 +24,18 @@ def add_todo(date, task):
       tasks[date] = []
       tasks[date].append(task)
 
-@bot.message_handler(commands=["help"])
+@bot.message_handler(commands=["help", "start"])
 def help(message):
     bot.send_message(message.chat.id, HELP)
+
+@bot.message_handler(commands=["bye"])
+def exit(message):
+    txt = "Бот остановлен. Спасибо за использование!)"
+    bot.send_message(message.chat.id, txt)
+    
+@bot.message_handler(commands=['count'])
+def chatting(message):
+    bot.send_message(message.chat.id, message.id)
 
 @bot.message_handler(commands=["add", "todo"])
 def add(message):
